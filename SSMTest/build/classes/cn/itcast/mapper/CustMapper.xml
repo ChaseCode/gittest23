@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itcast.mapper.CustMapper">
+	
+	<!-- 1对1关联查询 使用增强类方法 -->
+	<select id = "findAllCust"  parameterType = "queryvo" resultType = "custwithnickname">
+		select 
+			cid,
+			cust_name,
+			cust_type, 
+			cust_phone,
+			cust_address,
+			nickname
+		from s_cust c left join s_user u on c.cust_link_user = u.uid
+		<where>
+			<if test="cust_username1 != null and cust_username1 != ''">
+			
+				AND cust_name like '%${cust_username1}%'
+				
+			</if>
+			<if test="cust_type1 != null and cust_type1 != ''">
+			
+				AND cust_type = #{cust_type1}
+				
+			</if>
+		</where>
+	</select>
+	
+
+	<!-- 添加客户 -->
+	<insert id="add" parameterType = "cust">
+		insert into 
+			s_cust(cust_name,cust_type,cust_phone,cust_address,cust_link_user) 
+		values
+			(#{custName},#{custType},#{custPhone},#{custAddress},#{custLinkUser});
+	</insert>
+
+	<!--  删除客户 -->
+	<delete id = "deleteCust" parameterType = "int">
+		delete from s_cust where cid = #{cid};
+	</delete>
+
+</mapper>
